@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/user.model.js";
+import captainModel from "../models/captain.model.js";
 import blackListTokenModel from "../models/blackListToken.model.js";
 
 const auth = async (req, res, next) => {
@@ -15,12 +16,20 @@ const auth = async (req, res, next) => {
     }
 
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(id);
     const user = await userModel.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const captain = await captainModel.findById(id);
+    if (!user && !captain) {
+      return res.status(404).json({ message: "User or captain not found" });
     }
 
-    req.user = user;
+    if (captain) {
+      req.captain = captain;
+    }
+    if (user) {
+      req.user = user;
+    }
+
     next();
   } catch (error) {
     console.log(error);
