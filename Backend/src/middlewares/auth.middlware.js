@@ -16,7 +16,6 @@ const auth = async (req, res, next) => {
     }
 
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(id);
     const user = await userModel.findById(id);
     const captain = await captainModel.findById(id);
     if (!user && !captain) {
