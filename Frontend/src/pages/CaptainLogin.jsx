@@ -1,30 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { userContext } from "../contexts/userContext";
+import { captainContext } from "../contexts/captainContext";
 import axios from "axios";
 
-const UserLogin = () => {
+const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { user, setUser } = useContext(userContext);
+  const { captain, setCaptain } = useContext(captainContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const userData = { email, password };
+    const captainData = { email, password };
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/user/login`,
-        userData
+        `${import.meta.env.VITE_BASE_URL}/captain/login`,
+        captainData
       );
-      const { token, user } = res.data;
-      setUser({
-        fullName: user.fullName,
-        email: user.email,
-      });
-      localStorage.setItem("token", token);
-      navigate("/home");
+      if (res.status === 200) {
+        console.log(res.data);
+        const { token, captain } = res.data;
+        setCaptain({
+          fullName: captain.fullName,
+          email: captain.email,
+        });
+        localStorage.setItem("token", token);
+        navigate("/captain-home");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -37,6 +40,7 @@ const UserLogin = () => {
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
         <h1 className="text-3xl font-bold my-4">Rido</h1>
+        <h2 className="text-xl font-bold my-4">Captain-Login</h2>
         <form
           onSubmit={(e) => {
             submitHandler(e);
@@ -73,21 +77,21 @@ const UserLogin = () => {
         </form>
         <p className="text-center">
           New here?{" "}
-          <Link to="/signup" className="text-blue-600">
+          <Link to="/captain-signup" className="text-blue-600">
             Create new Account
           </Link>
         </p>
       </div>
       <div>
         <Link
-          to="/captain-login"
+          to="/login"
           className="bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base"
         >
-          Sign in as Captain
+          Sign in as User
         </Link>
       </div>
     </div>
   );
 };
 
-export default UserLogin;
+export default CaptainLogin;
