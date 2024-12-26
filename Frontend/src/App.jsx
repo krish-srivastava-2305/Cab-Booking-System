@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import CaptainProtectWrapper from "./pages/CaptainProtectWrapper";
 import CaptainHome from "./pages/CaptainHome";
 import CaptainLogout from "./pages/CaptainLogout";
+import UserLogout from "./pages/UserLogout";
 
 function App() {
   return (
