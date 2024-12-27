@@ -1,14 +1,24 @@
 import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import { X } from "lucide-react";
+import { CircleArrowDown, LucideArrowDownNarrowWide, X } from "lucide-react";
+import LocationSearchPanel from "../components/LocationSearchPanel";
+import VehicleSelectionPanel from "../components/VehicleSelectionPanel";
+import ConfirmRidePanel from "../components/ConfirmRidePanel";
+import WaitingForDriver from "../components/WaitingForDriver";
 
 const Home = () => {
   const [pickUp, setPickUp] = useState("");
   const [destination, setDestination] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
+  const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const vehiclePanel = useRef(null);
+  const confirmRidePanelRef = useRef(null);
+  const rideFoundRef = useRef(null);
+  const [confirmRidePanel, setConfirmRidePanel] = useState(false);
+  const [rideFound, setRideFound] = useState(false);
 
   useGSAP(
     function () {
@@ -35,14 +45,53 @@ const Home = () => {
     [panelOpen]
   );
 
-  const findTrip = () => {};
+  useGSAP(() => {
+    if (vehiclePanelOpen) {
+      gsap.to(vehiclePanel.current, {
+        height: "70%",
+      });
+    } else {
+      gsap.to(vehiclePanel.current, {
+        height: "0%",
+      });
+    }
+  }, [vehiclePanelOpen]);
+
+  useGSAP(() => {
+    if (confirmRidePanel) {
+      gsap.to(confirmRidePanelRef.current, {
+        height: "70%",
+      });
+    } else {
+      gsap.to(confirmRidePanelRef.current, {
+        height: "0%",
+      });
+    }
+  }, [confirmRidePanel]);
+
+  useGSAP(() => {
+    if (rideFound) {
+      gsap.to(rideFoundRef.current, {
+        height: "70%",
+      });
+    } else {
+      gsap.to(rideFoundRef.current, {
+        height: "0%",
+      });
+    }
+  }, [rideFound]);
+
+  const findTrip = () => {
+    setVehiclePanelOpen(true);
+    setPanelOpen(false);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
   };
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen overflow-hidden relative">
       <h1 className="text-3xl font-bold absolute top-5 left-5">Rido</h1>
       <div className="h-full w-full flex justify-center items-center">
         <img
@@ -50,7 +99,8 @@ const Home = () => {
           className="h-screen w-screen object-cover"
         />
       </div>
-      <div className=" flex flex-col justify-end h-screen absolute top-0 w-full">
+      {/* Location Search Panel */}
+      <div className="flex flex-col h-screen absolute top-0 justify-end w-full">
         <div className="h-[30%] p-6 bg-white relative">
           <h5
             ref={panelCloseRef}
@@ -89,7 +139,7 @@ const Home = () => {
               onChange={(e) => {
                 setDestination(e.target.value);
               }}
-              className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full  mt-3"
+              className="bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-3"
               type="text"
               placeholder="Enter your destination"
             />
@@ -101,7 +151,46 @@ const Home = () => {
             Find Trip
           </button>
         </div>
-        <div ref={panelRef} className="bg-white h-0"></div>
+        <div ref={panelRef} className="bg-white h-0">
+          <LocationSearchPanel
+            setDestination={setDestination}
+            setPickUp={setPickUp}
+          />
+        </div>
+      </div>
+      {/* Car Selection Panel */}
+      <div
+        ref={vehiclePanel}
+        className="h-0 w-full flex flex-col justify-center items-center bg-white absolute bottom-0 "
+      >
+        <div
+          className={`mt-4 ${vehiclePanelOpen ? "visible" : "hidden"}`}
+          onClick={() => setVehiclePanelOpen(false)}
+        >
+          <CircleArrowDown stroke="gray" />
+        </div>
+        <VehicleSelectionPanel setConfirmRidePanel={setConfirmRidePanel} />
+      </div>
+
+      {/* Confirm Ride Panel */}
+      <div
+        ref={confirmRidePanelRef}
+        className="absolute bottom-0 z-10 w-full h-0 bg-white flex flex-col items-center justify-center"
+      >
+        <div
+          className={`mt-4 ${confirmRidePanel ? "visible" : "hidden"}`}
+          onClick={() => setConfirmRidePanel(false)}
+        >
+          <CircleArrowDown stroke="gray" />
+        </div>
+        <ConfirmRidePanel setRideFound={setRideFound} />
+      </div>
+      {/* Waiting for driver panel */}
+      <div
+        ref={rideFoundRef}
+        className="absolute bottom-0 z-10 w-full h-0 bg-white"
+      >
+        <WaitingForDriver />
       </div>
     </div>
   );
