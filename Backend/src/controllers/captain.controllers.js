@@ -92,7 +92,7 @@ const logout = async (req, res) => {
 
     await blackListTokenModel.create({ token });
 
-    res.clearCookies(token);
+    res.clearCookie(token);
 
     res.status(200).json({ message: "Logout success" });
   } catch (error) {
