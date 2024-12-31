@@ -1,7 +1,11 @@
 import { IndianRupee, Timer, User } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 
-const VehicleSelectionPanel = ({ setConfirmRidePanel }) => {
+const VehicleSelectionPanel = ({
+  setConfirmRidePanel,
+  fare,
+  setSelectedVehicle,
+}) => {
   return (
     <div className="h-[100%] px-4 py-6 w-full bg-white">
       <h2 className="text-2xl font-bold mb-4">Select your ride</h2>
@@ -9,7 +13,10 @@ const VehicleSelectionPanel = ({ setConfirmRidePanel }) => {
         {/* Rido Car */}
         <div
           className="w-full hover:border-2 border-gray-800 rounded-xl py-2 px-4 flex items-center gap-4 cursor-pointer"
-          onClick={() => setConfirmRidePanel(true)}
+          onClick={() => {
+            setSelectedVehicle("car");
+            setConfirmRidePanel(true);
+          }}
         >
           <div className="h-20 w-20 rounded-2xl flex items-center justify-center overflow-hidden">
             <img
@@ -33,14 +40,17 @@ const VehicleSelectionPanel = ({ setConfirmRidePanel }) => {
           </div>
           <div className="flex items-center gap-1 font-semibold text-lg">
             <IndianRupee size={18} />
-            <p>455</p>
+            <p>{Math.ceil(fare.car)}</p>
           </div>
         </div>
 
         {/* Rido Auto */}
         <div
           className="w-full border-2 border-gray-800 rounded-xl py-2 px-4 flex items-center gap-4 cursor-pointer"
-          onClick={() => setConfirmRidePanel(true)}
+          onClick={() => {
+            setSelectedVehicle("auto");
+            setConfirmRidePanel(true);
+          }}
         >
           <div className="h-20 w-20 rounded-2xl flex items-center justify-center overflow-hidden bg-gray-100">
             <img
@@ -64,14 +74,17 @@ const VehicleSelectionPanel = ({ setConfirmRidePanel }) => {
           </div>
           <div className="flex items-center gap-1 font-semibold text-lg">
             <IndianRupee size={18} />
-            <p>225</p>
+            <p>{Math.ceil(fare.auto)}</p>
           </div>
         </div>
 
         {/* Rido Bike */}
         <div
           className="w-full border-2 border-gray-800 rounded-xl py-2 px-4 flex items-center gap-4 cursor-pointer"
-          onClick={() => setConfirmRidePanel(true)}
+          onClick={() => {
+            setSelectedVehicle("bike");
+            setConfirmRidePanel(true);
+          }}
         >
           <div className="h-20 w-20 rounded-2xl flex items-center justify-center overflow-hidden bg-gray-100">
             <img
@@ -95,7 +108,7 @@ const VehicleSelectionPanel = ({ setConfirmRidePanel }) => {
           </div>
           <div className="flex items-center gap-1 font-semibold text-lg">
             <IndianRupee size={18} />
-            <p>145</p>
+            <p>{Math.ceil(fare.bike)}</p>
           </div>
         </div>
       </div>

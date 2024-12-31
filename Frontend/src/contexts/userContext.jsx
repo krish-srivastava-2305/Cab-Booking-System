@@ -8,7 +8,7 @@ const UserContextComponent = ({ children }) => {
       firstName: "",
       lastName: "",
     },
-    email: "",
+    id: "",
   });
   const value = { user, setUser };
 

@@ -35,8 +35,6 @@ const CaptainSignup = () => {
       },
     };
 
-    console.log(newCaptain);
-
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/captain/register`,
@@ -46,7 +44,7 @@ const CaptainSignup = () => {
         const { token, captain } = res.data;
         setCaptain({
           fullName: captain.fullName,
-          email: captain.email,
+          id: captain._id,
         });
         localStorage.setItem("token", token);
         navigate("/captain-home");

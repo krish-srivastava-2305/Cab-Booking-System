@@ -32,28 +32,30 @@ const fareCalculator = async (destination, origin) => {
   return fare;
 };
 
-const createRide = async (origin, destination, vehicleType, id) => {
+const createRide = async (
+  origin,
+  destination,
+  vehicleType,
+  id,
+  pickup,
+  drop
+) => {
   if (!origin || !destination || !vehicleType || !id) {
     return null;
   }
-  const originCoords = await getAddressCoordinates(origin);
-  const destinationCoords = await getAddressCoordinates(destination);
 
-  console.log("Origin: ", originCoords, "Destination: ", destinationCoords);
-
-  const fare = await fareCalculator(originCoords, destinationCoords);
+  const fare = await fareCalculator(origin, destination);
   if (!fare) {
     return null;
   }
 
   const ride = await rideModel.create({
     user: id,
-    pickup: origin,
-    destination: destination,
+    pickup: pickup,
+    destination: drop,
     fare: fare[vehicleType],
     otp: Math.floor(100000 + Math.random() * 900000).toString(),
   });
-  console.log("ride: ", ride);
   return ride;
 };
 

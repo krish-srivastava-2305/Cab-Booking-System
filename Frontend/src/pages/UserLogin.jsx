@@ -21,7 +21,7 @@ const UserLogin = () => {
       const { token, user } = res.data;
       setUser({
         fullName: user.fullName,
-        email: user.email,
+        id: user._id,
       });
       localStorage.setItem("token", token);
       navigate("/home");

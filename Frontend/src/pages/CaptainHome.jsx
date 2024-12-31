@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopUp from "../components/RidePopUp";
@@ -6,6 +6,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ConfirmRidePopUp from "../components/ConfirmRidePopUp";
 import { LogOutIcon } from "lucide-react";
+import { captainContext } from "../contexts/captainContext";
+import { socketContext } from "../contexts/socketContext";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -14,11 +16,50 @@ const CaptainHome = () => {
   const ridePopupPanelRef = useRef(null);
   const confirmRidePopupPanelRef = useRef(null);
   const [ride, setRide] = useState(null);
+  const [captain, setCaptain] = useState(null);
 
   async function confirmRide() {
     setRidePopupPanel(false);
     setConfirmRidePopupPanel(true);
   }
+
+  const captainData = useContext(captainContext);
+  const { socket } = useContext(socketContext);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit("join", {
+      userId: captainData.captain.id,
+      userType: "captain",
+    });
+
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          socket.emit("update-captain-location", {
+            captainId: captainData.captain.id,
+            ltd: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        });
+      }
+    };
+
+    socket.on("new-ride", (data) => {
+      if (!data) return;
+      setRide(data.rideWithUser);
+      setRidePopupPanel(true);
+    });
+
+    socket.on("error", (data) => {
+      console.log(data);
+    });
+
+    updateLocation();
+    const locationInterval = setInterval(updateLocation, 5000);
+
+    return () => clearInterval(locationInterval);
+  }, [socket]);
 
   useGSAP(
     function () {
@@ -73,7 +114,7 @@ const CaptainHome = () => {
         />
       </div>
       <div className="h-2/5 p-6">
-        <CaptainDetails />
+        <CaptainDetails captain={captainData.captain} />
       </div>
       <div
         ref={ridePopupPanelRef}

@@ -8,7 +8,7 @@ const CaptainContextComponent = ({ children }) => {
       firstName: "",
       lastName: "",
     },
-    email: "",
+    id: "",
   });
 
   const value = { captain, setCaptain };

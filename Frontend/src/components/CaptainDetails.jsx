@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Timer } from "lucide-react";
 
-const CaptainDetails = () => {
+const CaptainDetails = ({ captain }) => {
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -11,7 +11,10 @@ const CaptainDetails = () => {
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdlMd7stpWUCmjpfRjUsQ72xSWikidbgaI1w&s"
             alt=""
           />
-          <h4 className="text-lg font-medium capitalize">Alok Jaahil</h4>
+          <h4 className="text-lg font-medium capitalize">
+            {/* {captain.fullName.firstName + " " + captain.fullName.lastName} */}
+            Moo Salah
+          </h4>
         </div>
         <div>
           <h4 className="text-xl font-semibold">₹295.20</h4>

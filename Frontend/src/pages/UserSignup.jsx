@@ -36,7 +36,7 @@ const UserSignup = () => {
 
         setUser({
           fullName: user.fullName,
-          email: user.email,
+          id: user._id,
         });
         localStorage.setItem("token", token);
         navigate("/home");

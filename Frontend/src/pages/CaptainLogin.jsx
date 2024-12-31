@@ -19,11 +19,11 @@ const CaptainLogin = () => {
         captainData
       );
       if (res.status === 200) {
-        console.log(res.data);
         const { token, captain } = res.data;
+        console.log(captain);
         setCaptain({
           fullName: captain.fullName,
-          email: captain.email,
+          id: captain._id,
         });
         localStorage.setItem("token", token);
         navigate("/captain-home");

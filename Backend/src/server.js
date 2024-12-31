@@ -5,9 +5,11 @@ dotenv.config({
 import http from "http";
 import app from "./app.js";
 import { connectDB } from "./db/connect.js";
+import { initializeSocket } from "./socket.js";
 
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
+const socket = initializeSocket(server);
 
 connectDB()
   .then(() => {

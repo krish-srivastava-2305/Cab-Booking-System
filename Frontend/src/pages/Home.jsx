@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { CircleArrowDown, LucideArrowDownNarrowWide, X } from "lucide-react";
@@ -6,19 +6,35 @@ import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehicleSelectionPanel from "../components/VehicleSelectionPanel";
 import ConfirmRidePanel from "../components/ConfirmRidePanel";
 import WaitingForDriver from "../components/WaitingForDriver";
+import axios from "axios";
+import { userContext } from "../contexts/userContext";
+import { socketContext } from "../contexts/socketContext";
 
 const Home = () => {
   const [pickUp, setPickUp] = useState("");
   const [destination, setDestination] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false);
+  const [confirmRidePanel, setConfirmRidePanel] = useState(false);
+  const [rideFound, setRideFound] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeInput, setActiveInput] = useState("");
+  const [fare, setFare] = useState({});
+  const [selectedVehicle, setSelectedVehicle] = useState("");
+
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
   const vehiclePanel = useRef(null);
   const confirmRidePanelRef = useRef(null);
   const rideFoundRef = useRef(null);
-  const [confirmRidePanel, setConfirmRidePanel] = useState(false);
-  const [rideFound, setRideFound] = useState(false);
+
+  const { user } = useContext(userContext);
+  const { socket } = useContext(socketContext);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit("join", { userId: user.id, userType: "user" });
+  }, [socket]);
 
   useGSAP(
     function () {
@@ -81,13 +97,60 @@ const Home = () => {
     }
   }, [rideFound]);
 
-  const findTrip = () => {
+  useEffect(() => {
+    if (pickUp && activeInput === "pickUp") {
+      const timeoutId = setTimeout(() => {
+        fetchSuggestions(pickUp, setSuggestions);
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [pickUp, activeInput]);
+
+  useEffect(() => {
+    if (destination && activeInput === "destination") {
+      const timeoutId = setTimeout(() => {
+        fetchSuggestions(destination, setSuggestions);
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [destination, activeInput]);
+
+  const findTrip = async () => {
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/ride/get-fare?origin=${pickUp}&destination=${destination}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setFare(response.data.fare);
+    } catch (error) {
+      console.log(error);
+    }
     setVehiclePanelOpen(true);
     setPanelOpen(false);
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+  const fetchSuggestions = async (input, setSuggestions) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/map/get-suggestions?input=${input}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setSuggestions(response.data);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+    }
   };
 
   return (
@@ -112,16 +175,12 @@ const Home = () => {
             <X />
           </h5>
           <h4 className="text-2xl font-semibold">Find a trip</h4>
-          <form
-            className="relative py-3"
-            onSubmit={(e) => {
-              submitHandler(e);
-            }}
-          >
+          <form className="relative py-3">
             <div className="line absolute h-16 w-1 top-[50%] -translate-y-1/2 left-5 bg-gray-700 rounded-full"></div>
             <input
               onClick={() => {
                 setPanelOpen(true);
+                setActiveInput("pickUp");
               }}
               value={pickUp}
               onChange={(e) => {
@@ -134,6 +193,7 @@ const Home = () => {
             <input
               onClick={() => {
                 setPanelOpen(true);
+                setActiveInput("destination");
               }}
               value={destination}
               onChange={(e) => {
@@ -155,6 +215,8 @@ const Home = () => {
           <LocationSearchPanel
             setDestination={setDestination}
             setPickUp={setPickUp}
+            suggestions={suggestions}
+            activeInput={activeInput}
           />
         </div>
       </div>
@@ -169,7 +231,11 @@ const Home = () => {
         >
           <CircleArrowDown stroke="gray" />
         </div>
-        <VehicleSelectionPanel setConfirmRidePanel={setConfirmRidePanel} />
+        <VehicleSelectionPanel
+          setConfirmRidePanel={setConfirmRidePanel}
+          fare={fare}
+          setSelectedVehicle={setSelectedVehicle}
+        />
       </div>
 
       {/* Confirm Ride Panel */}
@@ -183,7 +249,13 @@ const Home = () => {
         >
           <CircleArrowDown stroke="gray" />
         </div>
-        <ConfirmRidePanel setRideFound={setRideFound} />
+        <ConfirmRidePanel
+          setRideFound={setRideFound}
+          selectedVehicle={selectedVehicle}
+          pickUp={pickUp}
+          destination={destination}
+          fare={fare}
+        />
       </div>
       {/* Waiting for driver panel */}
       <div

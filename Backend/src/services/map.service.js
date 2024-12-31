@@ -1,4 +1,5 @@
 import axios from "axios";
+import captainModel from "../models/captain.model.js";
 
 // Get coordinates of an address
 const getAddressCoordinates = async (address) => {
@@ -28,8 +29,6 @@ const getDistanceAndTime = async (origin, destination) => {
   if (!origin || !destination) {
     return null;
   }
-
-  console.log(origin, destination);
 
   const apiKey = process.env.ORS_API_KEY;
   const url = `https://api.openrouteservice.org/v2/directions/driving-car`;
@@ -77,4 +76,25 @@ const getSuggestions = async (input) => {
   }
 };
 
-export { getAddressCoordinates, getDistanceAndTime, getSuggestions };
+const getCaptainsInRadius = async (ltd, lng, radius) => {
+  if (!ltd || !lng || !radius) {
+    return null;
+  }
+
+  const captains = await captainModel.find({
+    location: {
+      $geoWithin: {
+        $centerSphere: [[lng, ltd], radius / 6378.1],
+      },
+    },
+  });
+
+  return captains;
+};
+
+export {
+  getAddressCoordinates,
+  getDistanceAndTime,
+  getSuggestions,
+  getCaptainsInRadius,
+};
