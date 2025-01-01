@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ArrowBigDown, Currency } from "lucide-react";
 
 const ConfirmRidePopUp = (props) => {
   const [otp, setOtp] = useState("");
@@ -8,6 +8,25 @@ const ConfirmRidePopUp = (props) => {
 
   const submitHander = async (e) => {
     e.preventDefault();
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,
+      {
+        params: {
+          rideId: props.ride._id,
+          otp: otp,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      props.setConfirmRidePopupPanel(false);
+      props.setRidePopupPanel(false);
+      navigate("/captain-riding", { state: { ride: props.ride } });
+    }
   };
   return (
     <div>
@@ -17,7 +36,7 @@ const ConfirmRidePopUp = (props) => {
           props.setRidePopupPanel(false);
         }}
       >
-        <ArrowBigDown />
+        <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
       </h5>
       <h3 className="text-2xl font-semibold mb-5">
         Confirm this ride to Start
@@ -29,7 +48,9 @@ const ConfirmRidePopUp = (props) => {
             src="https://i.pinimg.com/236x/af/26/28/af26280b0ca305be47df0b799ed1b12b.jpg"
             alt=""
           />
-          <h2 className="text-lg font-medium capitalize">Alok</h2>
+          <h2 className="text-lg font-medium capitalize">
+            {props.ride?.user.fullname.firstname}
+          </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
       </div>
@@ -40,7 +61,7 @@ const ConfirmRidePopUp = (props) => {
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
               <p className="text-sm -mt-1 text-gray-600">
-                11-B BakerVille, New Delhi
+                {props.ride?.pickup}
               </p>
             </div>
           </div>
@@ -48,13 +69,15 @@ const ConfirmRidePopUp = (props) => {
             <i className="text-lg ri-map-pin-2-fill"></i>
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">Sarojni, New Delhi</p>
+              <p className="text-sm -mt-1 text-gray-600">
+                {props.ride?.destination}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3">
-            <Currency />
+            <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹ 455 </h3>
+              <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>

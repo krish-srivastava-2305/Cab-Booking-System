@@ -29,7 +29,7 @@ const CaptainHome = () => {
   useEffect(() => {
     if (!socket) return;
     socket.emit("join", {
-      userId: captainData.captain.id,
+      token: localStorage.getItem("token"),
       userType: "captain",
     });
 
@@ -37,7 +37,7 @@ const CaptainHome = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           socket.emit("update-captain-location", {
-            captainId: captainData.captain.id,
+            token: localStorage.getItem("token"),
             ltd: position.coords.latitude,
             lng: position.coords.longitude,
           });
@@ -60,6 +60,24 @@ const CaptainHome = () => {
 
     return () => clearInterval(locationInterval);
   }, [socket]);
+
+  async function confirmRide() {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/confirm-ride`,
+        {
+          rideId: ride._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useGSAP(
     function () {

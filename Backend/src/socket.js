@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import userModel from "./models/user.model.js";
 import captainModel from "./models/captain.model.js";
+import jwt, { decode } from "jsonwebtoken";
 
 let io;
 
@@ -15,7 +16,15 @@ const initializeSocket = (server) => {
   io.on("connection", (socket) => {
     console.log(`Client connected: ${socket.id}`);
     socket.on("join", async (data) => {
-      const { userId, userType } = data;
+      const { token, userType } = data;
+      if (!token || !userType) {
+        console.log("Invalid data", token, userType);
+        socket.emit("error", { message: "Invalid data" });
+        return;
+      }
+
+      const decodedToken = jwt.decode(token);
+      const userId = decodedToken.id;
 
       if (userType === "user") {
         await userModel.findByIdAndUpdate(userId, { socketId: socket.id });
@@ -26,22 +35,17 @@ const initializeSocket = (server) => {
 
     socket.on("disconnect", async () => {
       console.log(`Client disconnected: ${socket.id}`);
-      const user = await userModel.findOne({ socketId: socket.id });
-      if (user) {
-        await userModel.findByIdAndUpdate(user._id, { socketId: null });
-      }
-      const captain = await captainModel.findOne({ socketId: socket.id });
-      if (captain) {
-        await captainModel.findByIdAndUpdate(captain._id, { socketId: null });
-      }
     });
 
     socket.on("update-captain-location", async (data) => {
-      const { ltd, lng, captainId } = data;
-      if (!ltd || !lng || !captainId) {
-        console.log("error", ltd, lng, captainId);
+      const { ltd, lng, token } = data;
+      if (!ltd || !lng || !token) {
+        console.log("error", ltd, lng, token);
         socket.emit("error", { message: "Invalid data" });
       }
+      const decodedToken = jwt.decode(token);
+      const captainId = decodedToken.id;
+
       await captainModel.findByIdAndUpdate(captainId, {
         location: { ltd, lng },
       });
@@ -50,8 +54,6 @@ const initializeSocket = (server) => {
 };
 
 const sendMessageToSocketId = (socketId, messageObject) => {
-  console.log(messageObject);
-
   if (io) {
     io.to(socketId).emit(messageObject.event, messageObject.data);
   } else {

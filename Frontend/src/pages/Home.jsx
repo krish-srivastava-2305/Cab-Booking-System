@@ -9,6 +9,7 @@ import WaitingForDriver from "../components/WaitingForDriver";
 import axios from "axios";
 import { userContext } from "../contexts/userContext";
 import { socketContext } from "../contexts/socketContext";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [pickUp, setPickUp] = useState("");
@@ -21,6 +22,7 @@ const Home = () => {
   const [activeInput, setActiveInput] = useState("");
   const [fare, setFare] = useState({});
   const [selectedVehicle, setSelectedVehicle] = useState("");
+  const [ride, setRide] = useState(null);
 
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
@@ -30,11 +32,25 @@ const Home = () => {
 
   const { user } = useContext(userContext);
   const { socket } = useContext(socketContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!socket) return;
-    socket.emit("join", { userId: user.id, userType: "user" });
-  }, [socket]);
+    console.log("Joining socket");
+    socket.emit("join", {
+      token: localStorage.getItem("token"),
+      userType: "user",
+    });
+
+    socket.on("ride-confirmed", (data) => {
+      setRide(data);
+      setRideFound(true);
+    });
+
+    socket.on("ride-started", (ride) => {
+      navigate("/riding");
+    });
+  });
 
   useGSAP(
     function () {
@@ -262,7 +278,7 @@ const Home = () => {
         ref={rideFoundRef}
         className="absolute bottom-0 z-10 w-full h-0 bg-white"
       >
-        <WaitingForDriver />
+        <WaitingForDriver ride={ride} />
       </div>
     </div>
   );

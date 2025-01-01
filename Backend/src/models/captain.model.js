@@ -75,6 +75,6 @@ captainSchema.methods.generateAuthToken = function () {
   );
 };
 
-const captainModel = mongoose.model("Captain", captainSchema);
+const captainModel = mongoose.model("captain", captainSchema);
 
 export default captainModel;
