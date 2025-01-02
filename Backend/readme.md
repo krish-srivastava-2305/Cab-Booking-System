@@ -1,6 +1,6 @@
 # Backend API Documentation
 
-## `/users/register` Endpoint
+## `/user/register` Endpoint
 
 ### Description
 
@@ -30,7 +30,7 @@ The request body should be in JSON format and include the following fields:
   - `password` (string): User's password (minimum 6 characters).
 - `token` (String): JWT Token
 
-## `/users/login` Endpoint
+## `/user/login` Endpoint
 
 ### Description
 
@@ -42,7 +42,7 @@ Authenticates a user using their email and password, returning a JWT token upon 
 
 ### Endpoint
 
-`/users/login`
+`/user/login`
 
 ### Request Body
 
@@ -61,7 +61,7 @@ The request body should be in JSON format and include the following fields:
   - `password` (string): User's password (minimum 6 characters).
 - `token` (String): JWT Token
 
-## `/users/profile` Endpoint
+## `/user/profile` Endpoint
 
 ### Description
 
@@ -86,7 +86,7 @@ Requires a valid JWT token in the Authorization header:
 
 
 
-## `/users/logout` Endpoint
+## `/user/logout` Endpoint
 
 ### Description
 
@@ -134,7 +134,7 @@ The request body should be in JSON format and include the following fields:
 ### Example Response
 
 
-## `/captains/register` Endpoint
+## `/captain/register` Endpoint
 
 ### Description
 
@@ -174,7 +174,7 @@ The request body should be in JSON format and include the following fields:
     - `vehicleType` (string): Type of vehicle.
 - `token` (String): JWT Token
 
-## `/captains/login` Endpoint
+## `/captain/login` Endpoint
 
 ### Description
 
@@ -186,7 +186,7 @@ Authenticates a captain using their email and password, returning a JWT token up
 
 ### Endpoint
 
-`/captains/login`
+`/captain/login`
 
 ### Request Body
 
@@ -210,7 +210,7 @@ The request body should be in JSON format and include the following fields:
     - `vehicleType` (string): Type of vehicle.
 - `token` (String): JWT Token
 
-## `/captains/profile` Endpoint
+## `/captain/profile` Endpoint
 
 ### Description
 
@@ -238,7 +238,7 @@ Requires a valid JWT token in the Authorization header:
     - `capacity` (number): Vehicle passenger capacity.
     - `vehicleType` (string): Type of vehicle.
 
-## `/captains/logout` Endpoint
+## `/captain/logout` Endpoint
 
 ### Description
 
@@ -257,7 +257,7 @@ Requires a valid JWT token in the Authorization header or cookie.
 - `message` (string): Logout successfully.
 
 
-## `/maps/get-coordinates` Endpoint
+## `/map/get-coordinates` Endpoint
 
 ### Description
 
@@ -273,7 +273,7 @@ Retrieves the coordinates (latitude and longitude) for a given address.
 
 ### Example Request
 
-GET `/maps/get-coordinates?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA`
+GET `/map/get-coordinates?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA`
 
 ### Example Response
 
@@ -295,7 +295,7 @@ GET `/maps/get-coordinates?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA`
 }
 ```
 
-## `/maps/get-distance-time` Endpoint
+## `/map/get-distance-time` Endpoint
 
 ### Description
 
@@ -313,7 +313,7 @@ Retrieves the distance and estimated travel time between two locations.
 ### Example Request
 
 ```
-GET /maps/get-distance-time?origin=New+York,NY&destination=Los+Angeles,CA
+GET /map/get-distance-time?origin=New+York,NY&destination=Los+Angeles,CA
 ```
 
 ### Example Response
@@ -342,7 +342,7 @@ GET /maps/get-distance-time?origin=New+York,NY&destination=Los+Angeles,CA
 }
 ```
 
-## `/maps/get-suggestions` Endpoint
+## `/map/get-suggestions` Endpoint
 
 ### Description
 
@@ -382,7 +382,7 @@ GET /maps/get-suggestions?input=1600+Amphitheatre
 }
 ```
 
-## `/rides/create` Endpoint
+## `/ride/create` Endpoint
 
 ### Description
 
@@ -429,7 +429,7 @@ The request body should be in JSON format and include the following fields:
 ```
 
 
-## `/rides/get-fare` Endpoint
+## `/ride/get-fare` Endpoint
 
 ### Description
 
@@ -456,7 +456,7 @@ er <token>`
 ### Example Request
 
 ```
-GET /rides/get-fare?pickup=1600+Amphitheatre+Parkway,+Mountain+View,+CA&destination=1+Infinite+Loop,+Cupertino,+CA
+GET /ride/get-fare?pickup=1600+Amphitheatre+Parkway,+Mountain+View,+CA&destination=1+Infinite+Loop,+Cupertino,+CA
 ```
 
 ### Example Response
