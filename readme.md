@@ -57,8 +57,7 @@ The database is implemented using MongoDB with Mongoose for Object Data Modeling
 - **Ride**: Details of rides booked and assigned.
 - **BlackListTokenModel**: Stores logged-out tokens for enhanced security.
 
-<!-- > **Image Placeholder**: Add an ER diagram or schema design image here. -->
-`![Database Design](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829115/Rido/Rido_ER_Diagram_yd7ya3.png)`
+![Database Design](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829115/Rido/Rido_ER_Diagram_yd7ya3.png)
 
 ---
 
@@ -76,8 +75,8 @@ The database is implemented using MongoDB with Mongoose for Object Data Modeling
 **External Services Integration**:
 - OpenRouteServices for mapping.
 
-<!-- > **Image Placeholder**: Add a flowchart or architecture diagram here. -->
-`![High-Level Design](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829117/Rido/Rido_HLD_pmaugw.png)`
+
+![High-Level Design](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829117/Rido/Rido_HLD_pmaugw.png)
 
 ---
 
@@ -94,20 +93,15 @@ The frontend is a **React + Vite** application configured with **Tailwind CSS**.
 - GSAP
 - Lucide-React
 
-<!-- > **Image Placeholder**: Add a screenshot of the frontend landing page here. -->
-<!-- `![Frontend Screenshot](URL_TO_FRONTEND_IMAGE)` -->
-
 ---
 
 ### User and Captain Flow
 
 The application seamlessly integrates separate flows for users and captains to ensure a smooth ride-booking and management experience.
 
-<!-- > **Image Placeholder**: Add a diagram or illustration of the data flow between user and captain. -->
-> Example: `![User Flow](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829121/Rido/User_Data_Flow_cg3mqo.png)`
+![User Flow](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829121/Rido/User_Data_Flow_cg3mqo.png)
 
-<!-- > **Image Placeholder**: Add a diagram or illustration of the data flow between user and captain. -->
-`![User Flow](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829113/Rido/Captain_Flow_Diagram_octtph.png)`
+![Captain Flow](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829113/Rido/Captain_Flow_Diagram_octtph.png)
 
 ---
 
@@ -115,14 +109,14 @@ The application seamlessly integrates separate flows for users and captains to e
 
 Snapshots of the application interface are included in the project repository.
 
-<!-- > **Image Placeholder**: Add snapshots of key screens here. -->
-`![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183152_gbnyls.png)`
 
-`![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183320_lkclrl.png)`
+![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183152_gbnyls.png)
 
-`![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829584/Screenshot_2025-01-01_183329_jytrcs.png)`
+![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183320_lkclrl.png)
 
-`![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829585/Screenshot_2025-01-01_183404_xqq9d9.png)`
+![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829584/Screenshot_2025-01-01_183329_jytrcs.png)
+
+![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829585/Screenshot_2025-01-01_183404_xqq9d9.png)
 
 ---
 
