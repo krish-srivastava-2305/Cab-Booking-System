@@ -10,6 +10,7 @@ import axios from "axios";
 import { userContext } from "../contexts/userContext";
 import { socketContext } from "../contexts/socketContext";
 import { Navigate, useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 const Home = () => {
   const [pickUp, setPickUp] = useState("");
@@ -48,7 +49,7 @@ const Home = () => {
     });
 
     socket.on("ride-started", (ride) => {
-      navigate("/riding");
+      navigate("/riding", { state: { ride } });
     });
   });
 
@@ -172,11 +173,8 @@ const Home = () => {
   return (
     <div className="h-screen w-screen overflow-hidden relative">
       <h1 className="text-3xl font-bold absolute top-5 left-5">Rido</h1>
-      <div className="h-full w-full flex justify-center items-center">
-        <img
-          src={"/exampleMap.png"}
-          className="h-screen w-screen object-cover"
-        />
+      <div className="h-full w-full flex justify-center items-center -z-10 relative">
+        <LiveTracking destination={[]} />
       </div>
       {/* Location Search Panel */}
       <div className="flex flex-col h-screen absolute top-0 justify-end w-full">

@@ -1,12 +1,28 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ArrowBigDown, CreditCard, Square } from "lucide-react";
 
 const FinishRide = (props) => {
   const navigate = useNavigate();
 
-  async function endRide() {}
+  async function endRide() {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/rides/end-ride`,
+      {
+        rideId: props.ride._id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      navigate("/captain-home");
+    }
+  }
 
   return (
     <div>
@@ -16,7 +32,7 @@ const FinishRide = (props) => {
           props.setFinishRidePanel(false);
         }}
       >
-        <ArrowBigDown />
+        <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
       </h5>
       <h3 className="text-2xl font-semibold mb-5">Finish this Ride</h3>
       <div className="flex items-center justify-between p-4 border-2 border-yellow-400 rounded-lg mt-4">
@@ -35,7 +51,7 @@ const FinishRide = (props) => {
       <div className="flex gap-2 justify-between flex-col items-center">
         <div className="w-full mt-5">
           <div className="flex items-center gap-5 p-3 border-b-2">
-            <Circle fill="black" size={10} />
+            <i className="ri-map-pin-user-fill"></i>
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
               <p className="text-sm -mt-1 text-gray-600">
@@ -44,7 +60,7 @@ const FinishRide = (props) => {
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
-            <Square fill="black" size={10} />
+            <i className="text-lg ri-map-pin-2-fill"></i>
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
               <p className="text-sm -mt-1 text-gray-600">
@@ -53,7 +69,7 @@ const FinishRide = (props) => {
             </div>
           </div>
           <div className="flex items-center gap-5 p-3">
-            <CreditCard size={10} />
+            <i className="ri-currency-line"></i>
             <div>
               <h3 className="text-lg font-medium">₹{props.ride?.fare} </h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>

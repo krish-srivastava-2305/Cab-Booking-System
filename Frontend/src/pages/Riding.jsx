@@ -1,16 +1,19 @@
-import { Home } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom"; // Added useLocation
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useContext } from "react";
+import { socketContext } from "../contexts/socketContext";
+import { useNavigate } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 const Riding = () => {
-  // const location = useLocation()
-  // const { ride } = location.state || {} // Retrieve ride data
-  // const { socket } = useContext(SocketContext)
-  // const navigate = useNavigate()
+  const location = useLocation();
+  const { ride } = location.state || {};
+  const { socket } = useContext(socketContext);
+  const navigate = useNavigate();
 
-  // socket.on("ride-ended", () => {
-  //     navigate('/home')
-  // })
+  socket.on("ride-ended", () => {
+    navigate("/home");
+  });
 
   return (
     <div className="h-screen">
@@ -18,17 +21,10 @@ const Riding = () => {
         to="/home"
         className="fixed right-2 top-2 h-10 w-10 bg-white flex items-center justify-center rounded-full"
       >
-        <Home />
+        <i className="text-lg font-medium ri-home-5-line"></i>
       </Link>
-
       <div className="h-1/2">
-        {/* <LiveTracking /> */}
-        <div className="h-full w-full flex justify-center items-center">
-          <img
-            src={"/exampleMap.png"}
-            className=" h-full w-full object-cover"
-          />
-        </div>
+        <LiveTracking destination={ride.destination} />
       </div>
       <div className="h-1/2 p-4">
         <div className="flex items-center justify-between">
@@ -38,8 +34,12 @@ const Riding = () => {
             alt=""
           />
           <div className="text-right">
-            <h2 className="text-lg font-medium capitalize">Alok</h2>
-            <h4 className="text-xl font-semibold -mt-1 -mb-1">UP78IO9856</h4>
+            <h2 className="text-lg font-medium capitalize">
+              {ride?.captain.fullname.firstname}
+            </h2>
+            <h4 className="text-xl font-semibold -mt-1 -mb-1">
+              {ride?.captain.vehicle.plate}
+            </h4>
             <p className="text-sm text-gray-600">Maruti Suzuki Alto</p>
           </div>
         </div>
@@ -51,14 +51,14 @@ const Riding = () => {
               <div>
                 <h3 className="text-lg font-medium">562/11-A</h3>
                 <p className="text-sm -mt-1 text-gray-600">
-                  11-B BakerVille, New Delhi
+                  {ride?.destination}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-5 p-3">
               <i className="ri-currency-line"></i>
               <div>
-                <h3 className="text-lg font-medium">₹344 </h3>
+                <h3 className="text-lg font-medium">₹{ride?.fare} </h3>
                 <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
               </div>
             </div>
