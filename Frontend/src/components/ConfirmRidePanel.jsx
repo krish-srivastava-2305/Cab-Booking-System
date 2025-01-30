@@ -3,6 +3,7 @@ import React from "react";
 
 const ConfirmRidePanel = ({
   setRideFound,
+  handleConfirmRide,
   selectedVehicle,
   pickUp,
   destination,
@@ -60,7 +61,7 @@ const ConfirmRidePanel = ({
         </h1>
       </div>
       <button
-        onClick={() => setRideFound(true)}
+        onClick={handleConfirmRide}
         className="w-full bg-black text-white px-12 py-4 rounded-2xl text-xl font-semibold"
       >
         Confirm Ride

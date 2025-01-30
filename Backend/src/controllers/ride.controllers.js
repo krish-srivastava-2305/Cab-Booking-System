@@ -44,17 +44,22 @@ const rideCreator = async (req, res) => {
 
     res.status(200).json({ message: "Ride created successfully", ride });
 
+    console.log("Coordinates", originCoords.lat, originCoords.lng);
+
     // Emit the ride to the captains
     const captains = await getCaptainsInRadius(
       originCoords.lat,
       originCoords.lng,
-      5
+      2
     );
+    console.log(captains);
 
     const rideWithUser = await rideModel
       .findOne({ _id: ride._id })
       .select("-otp")
       .populate("user");
+
+    console.log(rideWithUser);
 
     captains.forEach((captain) => {
       sendMessageToSocketId(captain.socketId, {

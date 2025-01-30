@@ -35,7 +35,11 @@ const register = async (req, res) => {
     const token = await userDoc.generateAuthToken();
 
     // Sending the token and user details in the response
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+    });
+
     res.status(201).json({ token, user });
   } catch (error) {
     // Logging the error and send a response
@@ -70,7 +74,10 @@ const login = async (req, res) => {
     const token = await user.generateAuthToken();
 
     // Sending the token and user details in the response
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+    });
     res.status(200).json({ token, user });
   } catch (error) {
     console.log(error);

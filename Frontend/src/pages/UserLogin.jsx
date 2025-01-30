@@ -16,7 +16,10 @@ const UserLogin = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/user/login`,
-        userData
+        userData,
+        {
+          withCredentials: true,
+        }
       );
       const { token, user } = res.data;
       setUser({

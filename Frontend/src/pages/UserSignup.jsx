@@ -26,7 +26,10 @@ const UserSignup = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/user/register`,
-        newUser
+        newUser,
+        {
+          withCredentials: true,
+        }
       );
 
       if (res.status === 201) {

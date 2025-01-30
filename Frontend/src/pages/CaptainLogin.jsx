@@ -16,7 +16,10 @@ const CaptainLogin = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/captain/login`,
-        captainData
+        captainData,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         const { token, captain } = res.data;

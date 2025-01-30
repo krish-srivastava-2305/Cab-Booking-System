@@ -32,7 +32,9 @@ const CaptainHome = () => {
       token: localStorage.getItem("token"),
       userType: "captain",
     });
+  });
 
+  useEffect(() => {
     const updateLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {

@@ -37,7 +37,6 @@ const Home = () => {
 
   useEffect(() => {
     if (!socket) return;
-    console.log("Joining socket");
     socket.emit("join", {
       token: localStorage.getItem("token"),
       userType: "user",
@@ -170,11 +169,33 @@ const Home = () => {
     }
   };
 
+  const handleConfirmRide = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/ride/create`,
+        {
+          origin: pickUp,
+          destination: destination,
+          vehicleType: selectedVehicle,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(response.data);
+      setRideFound(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="h-screen w-screen overflow-hidden relative">
       <h1 className="text-3xl font-bold absolute top-5 left-5">Rido</h1>
       <div className="h-full w-full flex justify-center items-center -z-10 relative">
-        <LiveTracking destination={[]} />
+        {/* <LiveTracking destination={[]} /> */}
       </div>
       {/* Location Search Panel */}
       <div className="flex flex-col h-screen absolute top-0 justify-end w-full">
@@ -269,6 +290,7 @@ const Home = () => {
           pickUp={pickUp}
           destination={destination}
           fare={fare}
+          handleConfirmRide={handleConfirmRide}
         />
       </div>
       {/* Waiting for driver panel */}
