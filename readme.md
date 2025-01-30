@@ -57,7 +57,7 @@ The database is implemented using MongoDB with Mongoose for Object Data Modeling
 - **Ride**: Details of rides booked and assigned.
 - **BlackListTokenModel**: Stores logged-out tokens for enhanced security.
 
-![Database Design](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829115/Rido/Rido_ER_Diagram_yd7ya3.png)
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829115/Rido/Rido_ER_Diagram_yd7ya3.png" alt="Database Design" width="300">
 
 ---
 
@@ -75,8 +75,7 @@ The database is implemented using MongoDB with Mongoose for Object Data Modeling
 **External Services Integration**:
 - OpenRouteServices for mapping.
 
-
-![High-Level Design](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829117/Rido/Rido_HLD_pmaugw.png)
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829117/Rido/Rido_HLD_pmaugw.png" alt="High-Level Design" width="600">
 
 ---
 
@@ -99,9 +98,8 @@ The frontend is a **React + Vite** application configured with **Tailwind CSS**.
 
 The application seamlessly integrates separate flows for users and captains to ensure a smooth ride-booking and management experience.
 
-![User Flow](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829121/Rido/User_Data_Flow_cg3mqo.png)
-
-![Captain Flow](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829113/Rido/Captain_Flow_Diagram_octtph.png)
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829121/Rido/User_Data_Flow_cg3mqo.png" alt="User Flow" width="500">
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829113/Rido/Captain_Flow_Diagram_octtph.png" alt="Captain Flow" width="500">
 
 ---
 
@@ -109,14 +107,10 @@ The application seamlessly integrates separate flows for users and captains to e
 
 Snapshots of the application interface are included in the project repository.
 
-
-![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183152_gbnyls.png)
-
-![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183320_lkclrl.png)
-
-![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829584/Screenshot_2025-01-01_183329_jytrcs.png)
-
-![Prototype Snapshot](https://res.cloudinary.com/dd0168zpx/image/upload/v1735829585/Screenshot_2025-01-01_183404_xqq9d9.png)
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183152_gbnyls.png" alt="Prototype Snapshot 1" width="250">
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829583/Screenshot_2025-01-01_183320_lkclrl.png" alt="Prototype Snapshot 2" width="250">
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829584/Screenshot_2025-01-01_183329_jytrcs.png" alt="Prototype Snapshot 3" width="250">
+<img src="https://res.cloudinary.com/dd0168zpx/image/upload/v1735829585/Screenshot_2025-01-01_183404_xqq9d9.png" alt="Prototype Snapshot 4" width="250">
 
 ---
 
