@@ -61,14 +61,17 @@ const createRide = async (
 
 const rideConfirmer = async (rideId, captainId) => {
   if (!rideId || !captainId) {
+    console.log("Ride ID and Captain ID are required");
     return null;
   }
 
   const existingRide = await rideModel.findById(rideId);
-  if (!ride) {
+  if (!existingRide) {
+    console.log("Ride not found");
     return null;
   }
   if (existingRide.status !== "pending") {
+    console.log("Ride not pending");
     return null;
   }
 

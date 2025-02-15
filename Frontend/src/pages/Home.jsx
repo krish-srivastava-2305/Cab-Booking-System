@@ -37,20 +37,37 @@ const Home = () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.emit("join", {
-      token: localStorage.getItem("token"),
-      userType: "user",
+  
+    socket.off("ride-confirmed"); // Remove previous listeners before adding a new one
+    socket.off("ride-started");
+  
+    socket.on("connect", () => {
+      console.log("Socket connected, joining...");
+      socket.emit("join", {
+        token: localStorage.getItem("token"),
+        userType: "user",
+      });
     });
-
+  
     socket.on("ride-confirmed", (data) => {
       setRide(data);
       setRideFound(true);
+      console.log("Ride confirmed", data);
     });
-
+  
     socket.on("ride-started", (ride) => {
       navigate("/riding", { state: { ride } });
     });
-  });
+  
+    return () => {
+      // Cleanup event listeners when component unmounts
+      socket.off("ride-confirmed");
+      socket.off("ride-started");
+    };
+  }, [socket]);
+  
+  
+  
 
   useGSAP(
     function () {
@@ -171,31 +188,27 @@ const Home = () => {
 
   const handleConfirmRide = async () => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/ride/create`,
-        {
-          origin: pickUp,
-          destination: destination,
-          vehicleType: selectedVehicle,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/ride/create`, {
+        origin: pickUp,
+        destination: destination,
+        vehicleType: selectedVehicle,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
         }
-      );
-      console.log(response.data);
+      })
       setRideFound(true);
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <div className="h-screen w-screen overflow-hidden relative">
       <h1 className="text-3xl font-bold absolute top-5 left-5">Rido</h1>
       <div className="h-full w-full flex justify-center items-center -z-10 relative">
-        {/* <LiveTracking destination={[]} /> */}
+        <LiveTracking destination={[]} />
       </div>
       {/* Location Search Panel */}
       <div className="flex flex-col h-screen absolute top-0 justify-end w-full">
@@ -286,18 +299,30 @@ const Home = () => {
         </div>
         <ConfirmRidePanel
           setRideFound={setRideFound}
+          handleConfirmRide={handleConfirmRide}
           selectedVehicle={selectedVehicle}
           pickUp={pickUp}
           destination={destination}
           fare={fare}
-          handleConfirmRide={handleConfirmRide}
         />
       </div>
       {/* Waiting for driver panel */}
-      <div
+      {/* <div
         ref={rideFoundRef}
         className="absolute bottom-0 z-10 w-full h-0 bg-white"
       >
+        <WaitingForDriver ride={ride} />
+      </div> */}
+
+      <div
+        ref={rideFoundRef}
+        className="absolute bottom-0 z-10 w-full h-0 bg-white flex flex-col items-center justify-center"
+      >
+        <div
+          className={`mt-4 ${ride ? "visible" : "hidden"}`}
+          onClick={() => setConfirmRidePanel(false)}
+        >
+        </div>
         <WaitingForDriver ride={ride} />
       </div>
     </div>

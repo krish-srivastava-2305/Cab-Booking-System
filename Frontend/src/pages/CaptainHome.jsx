@@ -26,15 +26,61 @@ const CaptainHome = () => {
   const captainData = useContext(captainContext);
   const { socket } = useContext(socketContext);
 
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   socket.emit("join", {
+  //     token: localStorage.getItem("token"),
+  //     userType: "captain",
+  //   });
+  // });
+
+  // useEffect(() => {
+  //   const updateLocation = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition((position) => {
+  //         socket.emit("update-captain-location", {
+  //           token: localStorage.getItem("token"),
+  //           ltd: position.coords.latitude,
+  //           lng: position.coords.longitude,
+  //         });
+  //       });
+  //     }
+  //   };
+
+  //   socket.on("new-ride", (data) => {
+  //     if (!data) return;
+  //     setRide(data.rideWithUser);
+  //     setRidePopupPanel(true);
+  //   });
+
+  //   socket.on("error", (data) => {
+  //     console.log(data);
+  //   });
+
+  //   updateLocation();
+  //   const locationInterval = setInterval(updateLocation, 5000);
+
+  //   return () => clearInterval(locationInterval);
+  // }, [socket]);
+
   useEffect(() => {
     if (!socket) return;
+  
+    console.log("Joining socket...");
     socket.emit("join", {
       token: localStorage.getItem("token"),
       userType: "captain",
     });
-  });
-
+  
+    return () => {
+      console.log("Leaving socket...");
+      socket.off("join");
+    };
+  }, [socket]); // ✅ Runs only when `socket` changes
+  
   useEffect(() => {
+    if (!socket) return;
+  
     const updateLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -46,22 +92,32 @@ const CaptainHome = () => {
         });
       }
     };
-
+  
+    // ✅ Remove old event listeners before adding new ones
+    socket.off("new-ride");
+    socket.off("error");
+  
     socket.on("new-ride", (data) => {
       if (!data) return;
+      console.log("New ride received:", data);
       setRide(data.rideWithUser);
       setRidePopupPanel(true);
     });
-
+  
     socket.on("error", (data) => {
-      console.log(data);
+      console.log("Socket error:", data);
     });
-
+  
     updateLocation();
     const locationInterval = setInterval(updateLocation, 5000);
-
-    return () => clearInterval(locationInterval);
-  }, [socket]);
+  
+    return () => {
+      clearInterval(locationInterval);
+      socket.off("new-ride");
+      socket.off("error");
+    };
+  }, [socket]); // ✅ Runs only when `socket` changes
+  
 
   async function confirmRide() {
     try {

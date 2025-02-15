@@ -10,7 +10,7 @@ import {
   getAddressCoordinates,
   getCaptainsInRadius,
 } from "../services/map.service.js";
-import { sendMessageToSocketId } from "../socket.js";
+import { sendMessageToSocketId, sendMessageToSocketIdTwo } from "../socket.js";
 import rideModel from "../models/ride.model.js";
 
 const rideCreator = async (req, res) => {
@@ -29,6 +29,17 @@ const rideCreator = async (req, res) => {
     const id = user._id;
     const pickup = origin;
     const drop = destination;
+
+    if(!originCoords || !destinationCoords) {
+      return res.status(500).json({ message: "Coordinates not found" });
+    }
+
+    if(!id) {
+      return res.status(500).json({ message: "User not found" });
+    }
+
+    console.log(originCoords, destinationCoords, vehicleType, id, pickup, drop);
+
     const ride = await createRide(
       originCoords,
       destinationCoords,
@@ -114,16 +125,17 @@ const confirmRide = async (req, res) => {
     const { rideId } = req.body;
     const captain = req.captain;
     const captainId = captain._id.toString();
+    console.log(rideId, captainId);
     const ride = await rideConfirmer(rideId, captainId);
     if (!ride) {
       return res.status(500).json({ message: "Ride confirmation failed" });
     }
     res.status(200).json({ message: "Ride confirmed" });
-
-    sendMessageToSocketId(ride.user.socketId, {
+    sendMessageToSocketIdTwo(ride.user._id, {
       event: "ride-confirmed",
       data: ride,
     });
+    
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });

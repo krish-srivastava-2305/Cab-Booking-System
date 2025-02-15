@@ -60,5 +60,26 @@ const sendMessageToSocketId = (socketId, messageObject) => {
     console.log("Socket.io not initialized.");
   }
 };
+const sendMessageToSocketIdTwo = async (userId, userType, messageObject) => {
+  if (!io) {
+    console.log("Socket.io not initialized.");
+    return;
+  }
 
-export { initializeSocket, sendMessageToSocketId };
+  let user;
+  if (userType === "user") {
+    user = await userModel.findById(userId).select("socketId");
+  } else if (userType === "captain") {
+    user = await captainModel.findById(userId).select("socketId");
+  }
+
+  if (user && user.socketId) {
+    console.log(`Emitting event: ${messageObject.event} to socketId: ${user.socketId}`);
+    io.to(user.socketId).emit(messageObject.event, messageObject.data);
+  } else {
+    console.log(`No active socket found for ${userType} ${userId}`);
+  }
+};
+
+
+export { initializeSocket, sendMessageToSocketId, sendMessageToSocketIdTwo };
